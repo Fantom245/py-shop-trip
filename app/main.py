@@ -59,7 +59,7 @@ def shop_trip() -> None:
 
             # Сумма всех расходов
             price = fuel_cost + food_price
-            print(f"{customer.name}'s trip to {shop.name} costs {price}")
+            print(f"{customer.name}'s trip to {shop.name} costs {price:.2f}")
             small_price[shop.name] = price
 
         # Проверка, есть ли деньги на покупку
@@ -87,6 +87,7 @@ def shop_trip() -> None:
             # Обновление суммы оставшихся денег у клиента
             customer.money -= total_trip_cost
 
+            print()
             now_date = datetime.now()
             format_date = now_date.strftime("%d/%m/%Y %H:%M:%S")
             print(f"Date: {format_date}")
@@ -109,10 +110,12 @@ def shop_trip() -> None:
             print(f"Total cost is {food_price} dollars")
 
             print("See you again!")
+            print()
             print(f"{customer.name} rides home")
-            print(f"{customer.name} now has {customer.money} dollars")
+            print(f"{customer.name} now has {customer.money:.2f} dollars")
         else:
             print(
                 f"{customer.name} doesn't have enough"
                 f" money to make a purchase in any shop"
             )
+        print()
