@@ -4,6 +4,7 @@ from datetime import datetime
 from app.shop import Shop
 from app.customer import Customer
 
+
 def shop_trip() -> None:
     with open("config.json", "r") as file:
         data = json.load(file)
@@ -66,8 +67,9 @@ def shop_trip() -> None:
             cheapest_shop = min(small_price, key=small_price.get)
             print(f"{customer.name} rides to {cheapest_shop}")
 
-            # Обновление местоположения клиента на местоположение выбранного магазина
-            chosen_shop = next(shop for shop in shops if shop.name == cheapest_shop)
+            chosen_shop = next(
+                shop for shop in shops if shop.name == cheapest_shop
+            )
             customer.location = chosen_shop.location
 
             # Повторный расчёт стоимости топлива на обратный путь
@@ -93,7 +95,8 @@ def shop_trip() -> None:
             # Вывод товаров и стоимости
             print("You have bought:")
             print(
-                f"{customer.product_cart['milk']} milks for {milk_price} dollars"
+                f"{customer.product_cart['milk']} "
+                f"milks for {milk_price} dollars"
             )
             print(
                 f"{customer.product_cart['bread']} "
