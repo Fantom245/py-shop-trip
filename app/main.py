@@ -1,6 +1,6 @@
 import json
 from math import sqrt
-from datetime import datetime
+import datetime
 from app.shop import Shop
 from app.customer import Customer
 
@@ -30,10 +30,13 @@ def shop_trip() -> None:
             products=data_shop["products"]
         )
         shops.append(shop)
+    shop_lenght = (len(shops))
+    _lenght = 0
 
     for customer in customers:
-        print(f"{customer.name} has {customer.money:.2f} dollars")
+        print(f"{customer.name} has {customer.money} dollars")
         small_price = {}
+        _lenght += 1
         for shop in shops:
             # Расчет стоимости топлива на дорогу туда и обратно
             path = sqrt(
@@ -46,20 +49,20 @@ def shop_trip() -> None:
             fuel_cost = round(fuel_cost, 2)
 
             # Расчет стоимости продуктов в магазине
-            milk_price = customer.product_cart["milk"] * shop.products["milk"]
+            milk_price = (customer.product_cart["milk"] * shop.products["milk"])
             bread_price = (
                 customer.product_cart["bread"] * shop.products["bread"]
             )
             butter_price = (
                 customer.product_cart["butter"] * shop.products["butter"]
             )
-            food_price = round(milk_price + bread_price + butter_price, 2)
+            food_price = milk_price + bread_price + butter_price
 
             # Сумма всех расходов
-            price = round(fuel_cost + food_price, 2)
+            price = fuel_cost + food_price
             print(
                 f"{customer.name}'s trip to "
-                f"the {shop.name} costs {price:.2f}")
+                f"the {shop.name} costs {price}")
             small_price[shop.name] = price
 
         # Проверка, есть ли деньги на покупку
@@ -71,6 +74,12 @@ def shop_trip() -> None:
                 shop for shop in shops if shop.name == cheapest_shop
             )
 
+            # Расчет стоимости товаров в выбранном магазине
+            milk_price = customer.product_cart["milk"] * chosen_shop.products["milk"]
+            bread_price = customer.product_cart["bread"] * chosen_shop.products["bread"]
+            butter_price = customer.product_cart["butter"] * chosen_shop.products["butter"]
+            food_price = milk_price + bread_price + butter_price
+
             # Расчет расстояния на обратный путь
             path_back = sqrt(
                 ((chosen_shop.location[0] - customer.location[0]) ** 2)
@@ -78,19 +87,17 @@ def shop_trip() -> None:
             )
             return_trip_cost = round(
                 data["FUEL_PRICE"] * (
-                    path_back * (customer.car["fuel_consumption"] / 100)
+                    2 * path_back * (customer.car["fuel_consumption"] / 100)
                 ), 2
             )
 
-            total_trip_cost = round(
-                small_price[cheapest_shop] + return_trip_cost, 2
-            )
+            total_trip_cost = small_price[cheapest_shop]
 
             # Обновление суммы оставшихся денег у клиента
-            customer.money -= total_trip_cost
+            customer.money = round(customer.money - total_trip_cost, 2)
 
             print()
-            now_date = datetime.now()
+            now_date = datetime.datetime.now()
             format_date = now_date.strftime("%d/%m/%Y %H:%M:%S")
             print(f"Date: {format_date}")
             print(f"Thanks, {customer.name}, for your purchase!")
@@ -99,25 +106,28 @@ def shop_trip() -> None:
             print("You have bought:")
             print(
                 f"{customer.product_cart['milk']} "
-                f"milks for {milk_price:.2f} dollars"
+                f"milks for {milk_price} dollars"
             )
             print(
                 f"{customer.product_cart['bread']} "
-                f"breads for {bread_price:.2f} dollars"
+                f"breads for {bread_price:.0f} dollars"
             )
             print(
                 f"{customer.product_cart['butter']} "
-                f"butters for {butter_price:.2f} dollars"
+                f"butters for {butter_price} dollars"
             )
-            print(f"Total cost is {food_price:.2f} dollars")
+            print(f"Total cost is {food_price} dollars")
 
             print("See you again!")
             print()
             print(f"{customer.name} rides home")
-            print(f"{customer.name} now has {customer.money:.2f} dollars")
+            print(f"{customer.name} now has {customer.money} dollars")
         else:
             print(
                 f"{customer.name} doesn't have enough "
                 f"money to make a purchase in any shop"
             )
-        print()
+        if _lenght == shop_lenght:
+            pass
+        else:
+            print()
