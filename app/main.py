@@ -59,7 +59,7 @@ def shop_trip() -> None:
 
             # Сумма всех расходов
             price = fuel_cost + food_price
-            print(f"{customer.name}'s trip to {shop.name} costs {price:.2f}")
+            print(f"{customer.name}'s trip to the {shop.name} costs {price:.2f}")
             small_price[shop.name] = price
 
         # Проверка, есть ли деньги на покупку
