@@ -49,7 +49,9 @@ def shop_trip() -> None:
             fuel_cost = round(fuel_cost, 2)
 
             # Расчет стоимости продуктов в магазине
-            milk_price = (customer.product_cart["milk"] * shop.products["milk"])
+            milk_price = (
+                customer.product_cart["milk"] * shop.products["milk"]
+            )
             bread_price = (
                 customer.product_cart["bread"] * shop.products["bread"]
             )
@@ -70,26 +72,21 @@ def shop_trip() -> None:
             cheapest_shop = min(small_price, key=small_price.get)
             print(f"{customer.name} rides to {cheapest_shop}")
 
-            chosen_shop = next(
+            choss_shop = next(
                 shop for shop in shops if shop.name == cheapest_shop
             )
 
             # Расчет стоимости товаров в выбранном магазине
-            milk_price = customer.product_cart["milk"] * chosen_shop.products["milk"]
-            bread_price = customer.product_cart["bread"] * chosen_shop.products["bread"]
-            butter_price = customer.product_cart["butter"] * chosen_shop.products["butter"]
+            milk_price = (
+                customer.product_cart["milk"] * choss_shop.products["milk"]
+            )
+            bread_price = (
+                customer.product_cart["bread"] * choss_shop.products["bread"]
+            )
+            butter_price = (
+                customer.product_cart["butter"] * choss_shop.products["butter"]
+            )
             food_price = milk_price + bread_price + butter_price
-
-            # Расчет расстояния на обратный путь
-            path_back = sqrt(
-                ((chosen_shop.location[0] - customer.location[0]) ** 2)
-                + ((chosen_shop.location[1] - customer.location[1]) ** 2)
-            )
-            return_trip_cost = round(
-                data["FUEL_PRICE"] * (
-                    2 * path_back * (customer.car["fuel_consumption"] / 100)
-                ), 2
-            )
 
             total_trip_cost = small_price[cheapest_shop]
 
