@@ -32,36 +32,34 @@ def shop_trip() -> None:
         shops.append(shop)
 
     for customer in customers:
-        print(f"{customer.name} has {customer.money} dollars")
+        print(f"{customer.name} has {customer.money:.2f} dollars")
         small_price = {}
         for shop in shops:
-            # Расчёт стоимости топлива на дорогу туда и обратно
+            # Расчет стоимости топлива на дорогу туда и обратно
             path = sqrt(
-                (
-                    (shop.location[0] - customer.location[0]) ** 2
-                ) + ((shop.location[1] - customer.location[1]) ** 2)
+                ((shop.location[0] - customer.location[0]) ** 2)
+                + ((shop.location[1] - customer.location[1]) ** 2)
             )
             fuel_cost = data["FUEL_PRICE"] * (
                 2 * (path * (customer.car["fuel_consumption"] / 100))
             )
+            fuel_cost = round(fuel_cost, 2)
 
-            # Расчёт стоимости продуктов в магазине
-            milk_price = (
-                customer.product_cart["milk"] * shop.products["milk"]
-            )
+            # Расчет стоимости продуктов в магазине
+            milk_price = customer.product_cart["milk"] * shop.products["milk"]
             bread_price = (
                 customer.product_cart["bread"] * shop.products["bread"]
             )
             butter_price = (
                 customer.product_cart["butter"] * shop.products["butter"]
             )
-            food_price = milk_price + bread_price + butter_price
+            food_price = round(milk_price + bread_price + butter_price, 2)
 
             # Сумма всех расходов
-            price = fuel_cost + food_price
+            price = round(fuel_cost + food_price, 2)
             print(
-                f"{customer.name}'s trip to the {shop.name} costs {price:.2f}"
-            )
+                f"{customer.name}'s trip to "
+                f"the {shop.name} costs {price:.2f}")
             small_price[shop.name] = price
 
         # Проверка, есть ли деньги на покупку
@@ -72,19 +70,21 @@ def shop_trip() -> None:
             chosen_shop = next(
                 shop for shop in shops if shop.name == cheapest_shop
             )
-            customer.location = chosen_shop.location
 
-            # Повторный расчёт стоимости топлива на обратный путь
+            # Расчет расстояния на обратный путь
             path_back = sqrt(
-                (
-                    (chosen_shop.location[0] - customer.location[0]) ** 2
-                ) + ((chosen_shop.location[1] - customer.location[1]) ** 2)
+                ((chosen_shop.location[0] - customer.location[0]) ** 2)
+                + ((chosen_shop.location[1] - customer.location[1]) ** 2)
             )
-            return_trip_cost = data["FUEL_PRICE"] * (
-                path_back * (customer.car["fuel_consumption"] / 100)
+            return_trip_cost = round(
+                data["FUEL_PRICE"] * (
+                    path_back * (customer.car["fuel_consumption"] / 100)
+                ), 2
             )
 
-            total_trip_cost = small_price[cheapest_shop] + return_trip_cost
+            total_trip_cost = round(
+                small_price[cheapest_shop] + return_trip_cost, 2
+            )
 
             # Обновление суммы оставшихся денег у клиента
             customer.money -= total_trip_cost
@@ -99,17 +99,17 @@ def shop_trip() -> None:
             print("You have bought:")
             print(
                 f"{customer.product_cart['milk']} "
-                f"milks for {milk_price} dollars"
+                f"milks for {milk_price:.2f} dollars"
             )
             print(
                 f"{customer.product_cart['bread']} "
-                f"breads for {bread_price} dollars"
+                f"breads for {bread_price:.2f} dollars"
             )
             print(
                 f"{customer.product_cart['butter']} "
-                f"butters for {butter_price} dollars"
+                f"butters for {butter_price:.2f} dollars"
             )
-            print(f"Total cost is {food_price} dollars")
+            print(f"Total cost is {food_price:.2f} dollars")
 
             print("See you again!")
             print()
@@ -117,7 +117,7 @@ def shop_trip() -> None:
             print(f"{customer.name} now has {customer.money:.2f} dollars")
         else:
             print(
-                f"{customer.name} doesn't have enough"
-                f" money to make a purchase in any shop"
+                f"{customer.name} doesn't have enough "
+                f"money to make a purchase in any shop"
             )
         print()
